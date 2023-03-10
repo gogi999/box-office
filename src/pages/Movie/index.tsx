@@ -1,10 +1,74 @@
+import './style.css';
+
 import React from 'react';
 
+import { AiFillStar } from 'react-icons/ai';
+import { FiArrowLeft } from 'react-icons/fi';
+import {
+  useNavigate,
+  useParams,
+} from 'react-router-dom';
+
+import useFetchMovieById from '../../services/FetchMovie';
+
 const Movie = () => {
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const { data: movie } = useFetchMovieById(id || '');
+
     return (
-        <div>
-            Movie
-        </div>
+        <>
+            <div className="container">
+                <div className="header">
+                    <FiArrowLeft size={24} onClick={() => navigate("/")} />
+                </div>
+                <div className="movie-card">
+                    <div className="card-body">
+                        <div className="row">
+                            <div className="col-lg-5 col-md-4 col-sm-6">
+                                <div className="white-box">
+                                    <div className="poster">
+                                        <img 
+                                            src={`https://image.tmdb.org/t/p/w500${movie?.poster_path}`}
+                                            alt={movie?.original_title} 
+                                            className="img-responsive"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-lg-7 col-md-7 col-sm-6">
+                                <h4 className="text-left title">{movie?.original_title}</h4>
+                                <p className="text-left">{movie?.overview}</p>
+                                <div className="star">
+                                    <AiFillStar size={24} />
+                                    <span className="rating">{movie?.vote_average}</span>
+                                </div>
+                                <div className="text-left movie-detail">
+                                    <span>
+                                        Type 
+                                        <strong>Movie</strong>
+                                    </span>
+                                    <span>
+                                        Release Date 
+                                        <strong>{movie?.release_date}</strong>
+                                    </span>
+                                    <span>
+                                        Runtime 
+                                        <strong>{movie?.runtime}</strong>
+                                    </span>
+                                    <span>
+                                        Genre 
+                                        <strong>
+                                            {movie?.genres.map(({name}) => name).join(', ')}
+                                        </strong>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
     );
 }
 
